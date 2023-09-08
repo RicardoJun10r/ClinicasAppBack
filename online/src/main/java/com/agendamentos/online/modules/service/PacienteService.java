@@ -27,7 +27,7 @@ public class PacienteService {
 
     }
 
-    public Paciente save(String cpf){
+    public Paciente find(String cpf){
         Optional<Paciente> paciente = this.pacienteRepository.findByCpf(cpf);
         if(paciente.isPresent()){
             return paciente.get();
