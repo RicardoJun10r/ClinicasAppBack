@@ -3,6 +3,7 @@ package com.agendamentos.online.modules.model;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.agendamentos.online.util.enums.ApointmentEnum;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.CascadeType;
@@ -33,6 +34,9 @@ public class Agendamento {
 
     @Column(name = "date_col")
     private LocalDateTime consulta;
+
+    @Column(name = "state_col")
+    private ApointmentEnum apointmentEnum;
 
     @JsonBackReference
     @ManyToOne
