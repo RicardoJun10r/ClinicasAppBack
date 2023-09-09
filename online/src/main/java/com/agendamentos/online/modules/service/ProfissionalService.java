@@ -19,18 +19,20 @@ public class ProfissionalService {
 
     public Profissional save(Profissional profissional){
 
-        if(this.profissionalRepository.findByCode(profissional.getCode()).get() == null){
-            this.profissionalRepository.save(profissional);
-        }
+        Optional<Profissional> prOptional = this.profissionalRepository.findByCode(profissional.getCode());
 
-        throw new ResourceBadRequest("Você já possui cadastro!");
+        if(prOptional.isPresent()){
+            throw new ResourceBadRequest("Você já possui cadastro!");
+        }
+        
+        return this.profissionalRepository.save(profissional);
 
     }
 
-    public Profissional find(String code){
+    public Optional<Profissional> find(String code){
         Optional<Profissional> paciente = this.profissionalRepository.findByCode(code);
         if(paciente.isPresent()){
-            return paciente.get();
+            return paciente;
         }
 
         throw new ResourceNotFoundException("Conta não encontrada!");

@@ -19,18 +19,20 @@ public class PacienteService {
 
     public Paciente save(Paciente paciente){
 
-        if(this.pacienteRepository.findByCpf(paciente.getCpf()).get() == null){
-            this.pacienteRepository.save(paciente);
-        }
+        Optional<Paciente> pOptional = this.pacienteRepository.findByCpf(paciente.getCpf());
 
-        throw new ResourceBadRequest("Você já possui cadastro!");
+        if(pOptional.isPresent()){
+            throw new ResourceBadRequest("Você já possui cadastro!");
+        }
+        
+        return this.pacienteRepository.save(paciente);
 
     }
 
-    public Paciente find(String cpf){
+    public Optional<Paciente> find(String cpf){
         Optional<Paciente> paciente = this.pacienteRepository.findByCpf(cpf);
         if(paciente.isPresent()){
-            return paciente.get();
+            return paciente;
         }
 
         throw new ResourceNotFoundException("Conta não encontrada!");

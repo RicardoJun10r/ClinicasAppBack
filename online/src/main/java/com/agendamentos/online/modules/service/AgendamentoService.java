@@ -1,12 +1,17 @@
 package com.agendamentos.online.modules.service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.agendamentos.online.error.Exception.ResourceConditionFailed;
+import com.agendamentos.online.error.Exception.ResourceNotFoundException;
 import com.agendamentos.online.modules.model.Agendamento;
+import com.agendamentos.online.modules.model.Paciente;
+import com.agendamentos.online.modules.model.Profissional;
 import com.agendamentos.online.modules.repository.AgendamentoRepository;
 import com.agendamentos.online.util.enums.ApointmentEnum;
 
@@ -16,16 +21,88 @@ public class AgendamentoService {
     @Autowired
     private AgendamentoRepository agendamentoRepository;
 
+    @Autowired
+    private PacienteService pacienteService;
+
+    @Autowired
+    private ProfissionalService profissionalService;
+
     public Agendamento save(Agendamento agendamento){
         Optional<Agendamento> aOptional = this.agendamentoRepository.findByConsulta(agendamento.getConsulta());
         if(aOptional.isPresent()){
             if(aOptional.get().getApointmentEnum() == ApointmentEnum.MARCADO){
                 throw new ResourceConditionFailed("Horário indisponível");
             }
-            
+            return update(agendamento, aOptional.get().getUuid());
         }
 
-        return this.agendamentoRepository.save(agendamento);
+        Optional<Profissional> profissional = this.profissionalService.find(agendamento.getProfissional().getCode());
+        Optional<Paciente> paciente = this.pacienteService.find(agendamento.getPaciente().getCpf());
+
+        if(paciente.isPresent() && profissional.isPresent()){
+            agendamento.setPaciente(paciente.get());
+            agendamento.setProfissional(profissional.get());
+            profissional.get().setAgendamento(agendamento);
+            paciente.get().setAgendamento(agendamento);
+            return this.agendamentoRepository.save(agendamento);
+        }
+
+        throw new ResourceConditionFailed("Consulte sua conta ou do profissional");
+    }
+
+    public List<Agendamento> findAll(){
+        return this.agendamentoRepository.findAll();
+    }
+
+    public Optional<Agendamento> find(UUID uuid){
+        Optional<Agendamento> aOptional = this.agendamentoRepository.findById(uuid);
+
+        if(aOptional.isPresent()){
+            return aOptional;
+        }
+
+        throw new ResourceNotFoundException("Agendamento não encontrado!");
+    }
+
+    public Agendamento update(Agendamento novo, UUID velho){
+        Optional<Agendamento> aOptional = this.agendamentoRepository.findById(velho);
+
+        if(aOptional.isPresent()){
+            attCampos(aOptional.get(), novo);
+            return this.agendamentoRepository.save(aOptional.get());
+        }
+
+        throw new ResourceNotFoundException("Agendamento não encontrado!");
+
+    }
+
+    public String delete(UUID uuid){
+        Optional<Agendamento> aOptional = this.agendamentoRepository.findById(uuid);
+
+        if(aOptional.isPresent()){
+            this.agendamentoRepository.deleteById(uuid);
+            return "Deletado [ " + uuid + " ]";
+        }
+
+        throw new ResourceNotFoundException("Agendamento não encontrado!");
+    }
+
+    private void attCampos(Agendamento velho, Agendamento novo){
+        if(novo.getApointmentEnum() != null){
+            velho.setApointmentEnum(novo.getApointmentEnum());
+        }
+
+        if(novo.getConsulta() != null){
+            velho.setConsulta(novo.getConsulta());
+        }
+
+        if(novo.getProfissional().getCode() != null && !novo.getProfissional().getCode().isEmpty()){
+            velho.getProfissional().setCode(novo.getProfissional().getCode());
+        }
+
+        if(novo.getPaciente().getCpf() != null && !novo.getPaciente().getCpf().isEmpty()){
+            velho.getPaciente().setCpf(novo.getPaciente().getCpf());
+        }
     }
 
 }

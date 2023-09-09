@@ -1,5 +1,6 @@
 package com.agendamentos.online.modules.service;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -11,6 +12,7 @@ import com.agendamentos.online.error.Exception.ResourceBadRequest;
 import com.agendamentos.online.error.Exception.ResourceNotFoundException;
 import com.agendamentos.online.modules.model.Agendamento;
 import com.agendamentos.online.modules.model.Clinica;
+import com.agendamentos.online.modules.model.Paciente;
 import com.agendamentos.online.modules.model.Profissional;
 import com.agendamentos.online.modules.repository.ClinicaRepository;
 
@@ -23,20 +25,28 @@ public class ClinicaService {
     @Autowired
     private ProfissionalService profissionalService;
 
+    @Autowired
+    private PacienteService pacienteService;
+
+    @Autowired
+    private AgendamentoService agendamentoService;
+
     public Clinica save(Clinica clinica){
 
-        if(this.clinicaRepository.findByCnpj(clinica.getCnpj()).get() == null){
-            this.clinicaRepository.save(clinica);
-        }
+        Optional<Clinica> cOptional = this.clinicaRepository.findByCnpj(clinica.getCnpj());
 
-        throw new ResourceBadRequest("Você já possui cadastro!");
+        if(cOptional.isPresent()){
+            throw new ResourceBadRequest("Você já possui cadastro!");
+        }
+        
+        return this.clinicaRepository.save(clinica);
 
     }
 
-    public Clinica find(String cnpj){
+    public Optional<Clinica> find(String cnpj){
         Optional<Clinica> clinica = this.clinicaRepository.findByCnpj(cnpj);
         if(clinica.isPresent()){
-            return clinica.get();
+            return clinica;
         }
 
         throw new ResourceNotFoundException("Conta não encontrada!");
@@ -64,7 +74,7 @@ public class ClinicaService {
         throw new ResourceNotFoundException("Conta não encontrada!");
     }
 
-    public String addWorker(Profissional profissional, String cnpj){
+    public Profissional addWorker(Profissional profissional, String cnpj){
         Optional<Clinica> clinica = this.clinicaRepository.findByCnpj(cnpj);
         if(clinica.isPresent()){
             
@@ -72,7 +82,7 @@ public class ClinicaService {
             Profissional criado = this.profissionalService.save(profissional);
             clinica.get().getProfissionais().add(criado);
             this.clinicaRepository.save(clinica.get());
-            return "Adicionado !";
+            return criado;
         }
 
         throw new ResourceNotFoundException("Conta não encontrada!");
@@ -87,6 +97,39 @@ public class ClinicaService {
         throw new ResourceNotFoundException("Conta não encontrada!");
     }
 
+    public Agendamento addAppointment(Agendamento agendamento, String code, String cpf, UUID uuid){
+
+        Optional<Clinica> clinica = this.clinicaRepository.findById(uuid);
+        if(clinica.isPresent()){
+            Optional<Profissional> profissional = findWorker(clinica.get().getProfissionais(), code);
+            Optional<Paciente> paciente = this.pacienteService.find(cpf);
+            if(profissional.isPresent()){
+
+                clinica.get().getAgendamentos().add(agendamento);
+
+                agendamento.setClinica(clinica.get());
+
+                agendamento.setProfissional(profissional.get());
+
+                agendamento.setPaciente(paciente.get());
+
+                this.pacienteService.save(paciente.get());
+
+                this.profissionalService.save(profissional.get());
+
+                this.clinicaRepository.save(clinica.get());
+
+                return this.agendamentoService.save(agendamento);
+            }
+
+            throw new ResourceNotFoundException("Profissional não encontrada!");
+
+        }
+
+        throw new ResourceNotFoundException("Clínica não encontrada!");
+        
+    }
+
     public List<Agendamento> listAppointments(String cnpj){
         Optional<Clinica> clinica = this.clinicaRepository.findByCnpj(cnpj);
         if(clinica.isPresent()){
@@ -94,6 +137,17 @@ public class ClinicaService {
         }
 
         throw new ResourceNotFoundException("Conta não encontrada!");
+    }
+
+    private Optional<Profissional> findWorker(List<Profissional> lista, String code){
+        Iterator<Profissional> iterator = lista.iterator();
+        
+        while(iterator.hasNext()){
+            Profissional index = iterator.next();
+            if(index.getCode().equals(code)) return Optional.of(index);
+        }
+
+        return null;
     }
 
     private void attCampos(Clinica velho, Clinica novo){

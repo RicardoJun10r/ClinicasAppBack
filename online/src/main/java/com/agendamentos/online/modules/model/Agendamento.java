@@ -43,9 +43,9 @@ public class Agendamento {
     private Clinica clinica;
 
     @OneToOne(targetEntity = Paciente.class, mappedBy = "agendamento", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Paciente pacientes;
+    private Paciente paciente;
 
     @OneToOne(targetEntity = Profissional.class, mappedBy = "agendamento", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Profissional profissionais;
+    private Profissional profissional;
 
 }
