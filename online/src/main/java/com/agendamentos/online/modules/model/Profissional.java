@@ -4,7 +4,10 @@ import java.util.List;
 
 import com.agendamentos.online.modules.model.Interface.Pessoa;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -24,11 +27,11 @@ public class Profissional extends Pessoa {
     @Column(unique = true, name = "code_col")
     private String code;
 
-    @JsonManagedReference
+    @JsonManagedReference(value = "profissional-agendamento")
     @OneToMany(targetEntity = Agendamento.class, mappedBy = "profissional", cascade = CascadeType.ALL)
     private List<Agendamento> agendamentos;
 
-    @JsonBackReference
+    @JsonBackReference(value = "clinica-profissional")
     @ManyToOne
     private Clinica clinica;
 

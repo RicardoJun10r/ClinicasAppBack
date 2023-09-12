@@ -27,7 +27,7 @@ public class ClinicaController {
     @Autowired
     private ClinicaService clinicaService;
 
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<Clinica> create(@RequestBody Clinica clinica){
         return new ResponseEntity<Clinica>(this.clinicaService.save(clinica), HttpStatus.CREATED);
     }

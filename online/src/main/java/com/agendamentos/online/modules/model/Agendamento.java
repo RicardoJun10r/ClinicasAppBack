@@ -5,6 +5,10 @@ import java.util.UUID;
 
 import com.agendamentos.online.util.enums.ApointmentEnum;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -38,15 +42,15 @@ public class Agendamento {
     @Column(name = "duration")
     private Integer sessionTime;
 
-    @JsonBackReference
+    @JsonBackReference(value = "clinica-agendamento")
     @ManyToOne
     private Clinica clinica;
 
-    @JsonBackReference
+    @JsonBackReference(value = "paciente-agendamento")
     @ManyToOne
     private Paciente paciente;
 
-    @JsonBackReference
+    @JsonBackReference(value = "profissional-agendamento")
     @ManyToOne
     private Profissional profissional;
 

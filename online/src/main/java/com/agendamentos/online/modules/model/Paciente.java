@@ -3,7 +3,11 @@ package com.agendamentos.online.modules.model;
 import java.util.List;
 
 import com.agendamentos.online.modules.model.Interface.Pessoa;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -22,7 +26,7 @@ public class Paciente extends Pessoa {
     @Column(unique = true, name = "cpf_col")
     private String cpf;
     
-    @JsonManagedReference
+    @JsonManagedReference(value = "paciente-agendamento")
     @OneToMany(targetEntity = Agendamento.class, mappedBy = "paciente", cascade = CascadeType.ALL)
     private List<Agendamento> agendamentos;
 
