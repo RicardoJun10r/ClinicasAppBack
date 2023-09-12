@@ -104,7 +104,7 @@ public class ClinicaService {
             Optional<Profissional> profissional = findWorker(clinica.get().getProfissionais(), code);
             Optional<Paciente> paciente = this.pacienteService.find(cpf);
             if(profissional.isPresent()){
-
+                
                 clinica.get().getAgendamentos().add(agendamento);
 
                 agendamento.setClinica(clinica.get());
@@ -113,9 +113,9 @@ public class ClinicaService {
 
                 agendamento.setPaciente(paciente.get());
 
-                this.pacienteService.save(paciente.get());
+                this.pacienteService.addAppointment(agendamento);
 
-                this.profissionalService.save(profissional.get());
+                this.profissionalService.addAppointment(agendamento);
 
                 this.clinicaRepository.save(clinica.get());
 

@@ -36,18 +36,8 @@ public class AgendamentoService {
             return update(agendamento, aOptional.get().getUuid());
         }
 
-        Optional<Profissional> profissional = this.profissionalService.find(agendamento.getProfissional().getCode());
-        Optional<Paciente> paciente = this.pacienteService.find(agendamento.getPaciente().getCpf());
-
-        if(paciente.isPresent() && profissional.isPresent()){
-            agendamento.setPaciente(paciente.get());
-            agendamento.setProfissional(profissional.get());
-            profissional.get().setAgendamento(agendamento);
-            paciente.get().setAgendamento(agendamento);
-            return this.agendamentoRepository.save(agendamento);
-        }
-
-        throw new ResourceConditionFailed("Consulte sua conta ou do profissional");
+        return this.agendamentoRepository.save(agendamento);
+        
     }
 
     public List<Agendamento> findAll(){
@@ -88,6 +78,7 @@ public class AgendamentoService {
     }
 
     private void attCampos(Agendamento velho, Agendamento novo){
+        
         if(novo.getApointmentEnum() != null){
             velho.setApointmentEnum(novo.getApointmentEnum());
         }
@@ -96,13 +87,6 @@ public class AgendamentoService {
             velho.setConsulta(novo.getConsulta());
         }
 
-        if(novo.getProfissional().getCode() != null && !novo.getProfissional().getCode().isEmpty()){
-            velho.getProfissional().setCode(novo.getProfissional().getCode());
-        }
-
-        if(novo.getPaciente().getCpf() != null && !novo.getPaciente().getCpf().isEmpty()){
-            velho.getPaciente().setCpf(novo.getPaciente().getCpf());
-        }
     }
 
 }

@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,7 +27,7 @@ public class ClinicaController {
     @Autowired
     private ClinicaService clinicaService;
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<Clinica> create(@RequestBody Clinica clinica){
         return new ResponseEntity<Clinica>(this.clinicaService.save(clinica), HttpStatus.CREATED);
     }

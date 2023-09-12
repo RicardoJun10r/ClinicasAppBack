@@ -6,24 +6,21 @@ import java.util.UUID;
 import com.agendamentos.online.util.enums.ApointmentEnum;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "agendamentos_tb")
 public class Agendamento {
 
@@ -38,14 +35,19 @@ public class Agendamento {
     @Column(name = "state_col")
     private ApointmentEnum apointmentEnum;
 
+    @Column(name = "duration")
+    private Integer sessionTime;
+
     @JsonBackReference
     @ManyToOne
     private Clinica clinica;
 
-    @OneToOne(targetEntity = Paciente.class, mappedBy = "agendamento", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonBackReference
+    @ManyToOne
     private Paciente paciente;
 
-    @OneToOne(targetEntity = Profissional.class, mappedBy = "agendamento", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonBackReference
+    @ManyToOne
     private Profissional profissional;
 
 }
