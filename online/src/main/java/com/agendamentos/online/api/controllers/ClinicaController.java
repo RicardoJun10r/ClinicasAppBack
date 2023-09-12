@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,6 +46,11 @@ public class ClinicaController {
     @PostMapping("/{uuid}/agendamentos")
     public ResponseEntity<Agendamento> addAppointment(@RequestBody AgendamentoDTO agendamentoDTO, @PathVariable UUID uuid){
         return new ResponseEntity<Agendamento>(this.clinicaService.addAppointment(agendamentoDTO.agendamento(), agendamentoDTO.code(), agendamentoDTO.cpf(), uuid), HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/uuid")
+    public ResponseEntity<String> delete(@PathVariable UUID uuid){
+        return new ResponseEntity<String>(this.clinicaService.delete(uuid), HttpStatus.OK);
     }
 
 }
