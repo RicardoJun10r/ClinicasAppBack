@@ -3,9 +3,6 @@ package com.agendamentos.online.modules.model.Interface;
 import java.time.LocalDate;
 import java.util.UUID;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
