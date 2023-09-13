@@ -113,13 +113,15 @@ public class ClinicaService {
 
                 agendamento.setPaciente(paciente.get());
 
-                this.pacienteService.addAppointment(agendamento);
+                Optional<Agendamento> criado = Optional.of(this.agendamentoService.save(agendamento));
 
-                this.profissionalService.addAppointment(agendamento);
+                this.pacienteService.addAppointment(criado.get());
+
+                this.profissionalService.addAppointment(criado.get());
 
                 this.clinicaRepository.save(clinica.get());
 
-                return this.agendamentoService.save(agendamento);
+                return criado.get();
             }
 
             throw new ResourceNotFoundException("Profissional não encontrada!");
