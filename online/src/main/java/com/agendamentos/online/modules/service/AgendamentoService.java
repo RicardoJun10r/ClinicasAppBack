@@ -3,6 +3,7 @@ package com.agendamentos.online.modules.service;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,12 +29,13 @@ public class AgendamentoService {
     private ProfissionalService profissionalService;
 
     public Agendamento save(Agendamento agendamento){
-        Optional<Agendamento> aOptional = this.agendamentoRepository.findByConsulta(agendamento.getConsulta());
+        // Optional<Agendamento> aOptional = this.agendamentoRepository.findByConsulta(agendamento.getConsulta());
+        Optional<Agendamento> aOptional = this.agendamentoRepository.findAll().stream().filter(index -> index.getConsulta().equals(agendamento.getConsulta())).findFirst();
         if(aOptional.isPresent()){
             if(aOptional.get().getApointmentEnum() == ApointmentEnum.MARCADO){
                 throw new ResourceConditionFailed("Horário indisponível");
             }
-            return update(agendamento, aOptional.get().getUuid());
+            // return update(agendamento, aOptional.get().getUuid());
         }
 
         return this.agendamentoRepository.save(agendamento);
