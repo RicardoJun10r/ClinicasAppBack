@@ -3,7 +3,6 @@ package com.agendamentos.online.modules.service;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,8 +10,6 @@ import org.springframework.stereotype.Service;
 import com.agendamentos.online.error.Exception.ResourceConditionFailed;
 import com.agendamentos.online.error.Exception.ResourceNotFoundException;
 import com.agendamentos.online.modules.model.Agendamento;
-import com.agendamentos.online.modules.model.Paciente;
-import com.agendamentos.online.modules.model.Profissional;
 import com.agendamentos.online.modules.repository.AgendamentoRepository;
 import com.agendamentos.online.util.enums.ApointmentEnum;
 
@@ -21,12 +18,6 @@ public class AgendamentoService {
     
     @Autowired
     private AgendamentoRepository agendamentoRepository;
-
-    @Autowired
-    private PacienteService pacienteService;
-
-    @Autowired
-    private ProfissionalService profissionalService;
 
     public Agendamento save(Agendamento agendamento){
         // Optional<Agendamento> aOptional = this.agendamentoRepository.findByConsulta(agendamento.getConsulta());
