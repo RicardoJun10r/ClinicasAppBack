@@ -28,7 +28,8 @@ public class AgendamentoService {
             }
             // return update(agendamento, aOptional.get().getUuid());
         }
-
+        agendamento.setApointmentEnum(ApointmentEnum.MARCADO);
+        
         return this.agendamentoRepository.save(agendamento);
         
     }
