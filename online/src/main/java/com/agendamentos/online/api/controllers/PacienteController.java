@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.agendamentos.online.modules.model.Paciente;
@@ -28,6 +29,11 @@ public class PacienteController {
     @GetMapping("/{cpf}")
     public ResponseEntity<Paciente> find(@PathVariable String cpf){
         return new ResponseEntity<Paciente>(this.pacienteService.find(cpf).get(), HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<Paciente> findByLogin(@RequestParam String login){
+        return new ResponseEntity<Paciente>(this.pacienteService.findByLogin(login), HttpStatus.OK);
     }
 
 }

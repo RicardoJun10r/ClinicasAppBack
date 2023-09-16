@@ -47,6 +47,12 @@ public class PacienteService {
         throw new ResourceNotFoundException("Profissional não encontrado !");
     }
 
+    public Paciente findByLogin(String login){
+        Optional<Paciente> pOptional = this.pacienteRepository.findByLogin(login);
+        if(pOptional.isPresent()) return pOptional.get();
+        throw new ResourceNotFoundException("Não encontrado!");
+    }
+
     public Agendamento findAppointment(List<Agendamento> lista, UUID id){
         
         Iterator<Agendamento> iterator = lista.iterator();

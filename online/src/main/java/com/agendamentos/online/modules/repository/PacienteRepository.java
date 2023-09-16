@@ -9,4 +9,5 @@ import com.agendamentos.online.modules.model.Paciente;
 
 public interface PacienteRepository extends JpaRepository<Paciente, UUID> {
     Optional<Paciente> findByCpf(String cpf);
+    Optional<Paciente> findByLogin(String login);
 }

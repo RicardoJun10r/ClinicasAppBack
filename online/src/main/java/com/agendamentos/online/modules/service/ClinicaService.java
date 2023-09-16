@@ -52,6 +52,12 @@ public class ClinicaService {
         throw new ResourceNotFoundException("Conta não encontrada!");
     }
 
+    public Clinica findByLogin(String login){
+        Optional<Clinica> pOptional = this.clinicaRepository.findByLogin(login);
+        if(pOptional.isPresent()) return pOptional.get();
+        throw new ResourceNotFoundException("Não encontrado!");
+    }
+
     public Clinica update(UUID uuid, Clinica clinicaAtt){
         Optional<Clinica> clinica = this.clinicaRepository.findById(uuid);
         if(clinica.isPresent()){

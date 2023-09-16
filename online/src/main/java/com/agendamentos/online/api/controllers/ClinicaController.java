@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.agendamentos.online.modules.model.Agendamento;
@@ -34,6 +35,11 @@ public class ClinicaController {
     @GetMapping("/{cnpj}")
     public ResponseEntity<Clinica> find(@PathVariable String cnpj){
         return new ResponseEntity<Clinica>(this.clinicaService.find(cnpj).get(), HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<Clinica> findByLogin(@RequestParam String login){
+        return new ResponseEntity<Clinica>(this.clinicaService.findByLogin(login), HttpStatus.OK);
     }
 
     @PostMapping("/{cnpj}/profissional")

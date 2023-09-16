@@ -2,7 +2,7 @@ package com.agendamentos.online.modules.model;
 
 import java.util.List;
 
-import com.agendamentos.online.modules.model.Interface.Pessoa;
+import com.agendamentos.online.modules.model.Interface.Usuario;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
@@ -17,7 +17,7 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Table(name = "paciente_tb")
 @EqualsAndHashCode(callSuper = true)
-public class Paciente extends Pessoa {
+public class Paciente extends Usuario {
 
     @Column(unique = true, name = "cpf_col")
     private String cpf;
