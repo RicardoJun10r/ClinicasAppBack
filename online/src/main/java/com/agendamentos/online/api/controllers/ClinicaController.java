@@ -38,7 +38,7 @@ public class ClinicaController {
         return new ResponseEntity<Clinica>(this.clinicaService.find(cnpj).get(), HttpStatus.OK);
     }
 
-    @GetMapping()
+    @GetMapping("/list")
     public ResponseEntity<List<Clinica>> findAll(){
         return new ResponseEntity<List<Clinica>>(this.clinicaService.findAll(), HttpStatus.OK);
     }
