@@ -1,15 +1,17 @@
 package com.agendamentos.online.modules.model.Interface;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.MappedSuperclass;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@MappedSuperclass
+@EqualsAndHashCode(callSuper = true)
 public abstract class Usuario extends Pessoa {
 
     @Column(unique = true, name = "login")
