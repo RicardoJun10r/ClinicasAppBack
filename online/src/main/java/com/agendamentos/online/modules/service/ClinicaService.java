@@ -52,6 +52,15 @@ public class ClinicaService {
         throw new ResourceNotFoundException("Conta não encontrada!");
     }
 
+    public List<Clinica> findAll(){
+        List<Clinica> clinicas = this.clinicaRepository.findAll();
+        if(!clinicas.isEmpty()){
+            return clinicas;
+        }
+
+        throw new ResourceNotFoundException("Conta não encontrada!");
+    }
+
     public Clinica findByLogin(String login){
         Optional<Clinica> pOptional = this.clinicaRepository.findByLogin(login);
         if(pOptional.isPresent()) return pOptional.get();

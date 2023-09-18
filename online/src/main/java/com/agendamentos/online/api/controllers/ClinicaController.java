@@ -1,5 +1,6 @@
 package com.agendamentos.online.api.controllers;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,11 @@ public class ClinicaController {
     @GetMapping("/{cnpj}")
     public ResponseEntity<Clinica> find(@PathVariable String cnpj){
         return new ResponseEntity<Clinica>(this.clinicaService.find(cnpj).get(), HttpStatus.OK);
+    }
+
+    @GetMapping()
+    public ResponseEntity<List<Clinica>> findAll(){
+        return new ResponseEntity<List<Clinica>>(this.clinicaService.findAll(), HttpStatus.OK);
     }
 
     @GetMapping
