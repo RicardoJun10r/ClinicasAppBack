@@ -1,6 +1,6 @@
 package com.agendamentos.online.modules.model;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.UUID;
 
 import com.agendamentos.online.util.enums.ApointmentEnum;
@@ -30,10 +30,13 @@ public class Agendamento {
     private UUID uuid;
 
     @Column(name = "date_col")
-    private LocalDateTime consulta;
+    private LocalDate appointmentDate;
+
+    @Column(name = "time_col")
+    private Double appointmentTime;
 
     @Column(name = "state_col")
-    private ApointmentEnum apointmentEnum;
+    private ApointmentEnum status;
 
     @Column(name = "duration")
     private Integer sessionTime;

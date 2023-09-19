@@ -21,14 +21,14 @@ public class AgendamentoService {
 
     public Agendamento save(Agendamento agendamento){
         // Optional<Agendamento> aOptional = this.agendamentoRepository.findByConsulta(agendamento.getConsulta());
-        Optional<Agendamento> aOptional = this.agendamentoRepository.findAll().stream().filter(index -> index.getConsulta().equals(agendamento.getConsulta())).findFirst();
+        Optional<Agendamento> aOptional = this.agendamentoRepository.findAll().stream().filter(index -> index.getAppointmentDate().equals(agendamento.getAppointmentDate()) && index.getAppointmentTime().equals(agendamento.getAppointmentTime())).findFirst();
         if(aOptional.isPresent()){
-            if(aOptional.get().getApointmentEnum() == ApointmentEnum.MARCADO){
+            if(aOptional.get().getStatus() == ApointmentEnum.MARCADO){
                 throw new ResourceConditionFailed("Horário indisponível");
             }
             // return update(agendamento, aOptional.get().getUuid());
         }
-        agendamento.setApointmentEnum(ApointmentEnum.MARCADO);
+        agendamento.setStatus(ApointmentEnum.MARCADO);
         
         return this.agendamentoRepository.save(agendamento);
         
@@ -73,12 +73,16 @@ public class AgendamentoService {
 
     private void attCampos(Agendamento velho, Agendamento novo){
         
-        if(novo.getApointmentEnum() != null){
-            velho.setApointmentEnum(novo.getApointmentEnum());
+        if(novo.getStatus() != null){
+            velho.setStatus(novo.getStatus());
         }
 
-        if(novo.getConsulta() != null){
-            velho.setConsulta(novo.getConsulta());
+        if(novo.getAppointmentDate() != null){
+            velho.setAppointmentDate(novo.getAppointmentDate());
+        }
+
+        if(novo.getAppointmentTime() != null || novo.getAppointmentTime() > 0.0){
+            velho.setAppointmentTime(novo.getAppointmentTime());
         }
 
     }

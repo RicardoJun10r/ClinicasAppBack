@@ -24,9 +24,6 @@ public class Profissional extends Pessoa {
     @Column(unique = true, name = "code_col")
     private String code;
 
-    @Column(unique = true, name = "registro_col")
-    private String registro;
-
     @Column(name = "especialidade_col")
     private String especialidade;
 

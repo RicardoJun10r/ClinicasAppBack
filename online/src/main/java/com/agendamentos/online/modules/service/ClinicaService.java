@@ -1,9 +1,11 @@
 package com.agendamentos.online.modules.service;
 
+import java.time.LocalDate;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -145,6 +147,19 @@ public class ClinicaService {
 
         throw new ResourceNotFoundException("Clínica não encontrada!");
         
+    }
+
+    public List<Agendamento> getAppointments(UUID uuid, String code, LocalDate dia){
+        Optional<Clinica> clinica = this.clinicaRepository.findById(uuid);
+        if(clinica.isPresent()){
+            Optional<Profissional> profissional = findWorker(clinica.get().getProfissionais(), code);
+            if(profissional.isPresent()){
+                List<Agendamento> agendamentos = profissional.get().getAgendamentos().stream().filter(agendamento -> agendamento.getAppointmentDate().equals(dia)).sorted((agendamento1, agendamento2) -> agendamento1.getAppointmentDate().compareTo(agendamento2.getAppointmentDate())).collect(Collectors.toList());
+                return agendamentos;
+            }
+            throw new ResourceNotFoundException("Profissional não encontrada!");
+        }
+        throw new ResourceNotFoundException("Clínica não encontrada!");
     }
 
     public List<Agendamento> listAppointments(String cnpj){

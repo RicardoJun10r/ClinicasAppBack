@@ -1,5 +1,6 @@
 package com.agendamentos.online.api.controllers;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -61,6 +62,11 @@ public class ClinicaController {
     @DeleteMapping("/uuid")
     public ResponseEntity<String> delete(@PathVariable UUID uuid){
         return new ResponseEntity<String>(this.clinicaService.delete(uuid), HttpStatus.OK);
+    }
+
+    @GetMapping("/{uuid}/{code}/agendamentos")
+    public ResponseEntity<List<Agendamento>> getAppointments(@PathVariable UUID uuid, @PathVariable String code, @RequestParam LocalDate dia){
+        return new ResponseEntity<List<Agendamento>>(this.clinicaService.getAppointments(uuid, code, dia), HttpStatus.OK);
     }
 
 }

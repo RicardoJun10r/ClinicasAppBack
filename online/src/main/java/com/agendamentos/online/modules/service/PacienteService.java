@@ -38,7 +38,7 @@ public class PacienteService {
 
         if(pOptional.isPresent()){
 
-            if(pOptional.get().getAgendamentos() == null || agendamento.getApointmentEnum() != ApointmentEnum.MARCADO){
+            if(pOptional.get().getAgendamentos() == null || agendamento.getStatus() != ApointmentEnum.MARCADO){
                 pOptional.get().getAgendamentos().add(agendamento);
                 return this.pacienteRepository.save(pOptional.get());
             }
