@@ -93,6 +93,10 @@ public class PacienteService {
     }
 
     private void attCampos(Paciente velho, Paciente novo){
+
+        if(novo.getLogin() != null && !novo.getLogin().isEmpty()){
+            velho.setLogin(novo.getLogin());
+        }
         
         if(novo.getName() != null && !novo.getName().isEmpty()){
             velho.setName(novo.getName());

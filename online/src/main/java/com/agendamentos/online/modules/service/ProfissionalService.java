@@ -64,8 +64,8 @@ public class ProfissionalService {
         throw new ResourceNotFoundException("Conta não encontrada!");
     }
 
-    public Profissional update(UUID uuid, Profissional profissionalAtt){
-        Optional<Profissional> proficional = this.profissionalRepository.findById(uuid);
+    public Profissional update(String code, Profissional profissionalAtt){
+        Optional<Profissional> proficional = this.profissionalRepository.findByCode(code);
         if(proficional.isPresent()){
             this.attCampos(proficional.get(), profissionalAtt);
             this.profissionalRepository.save(proficional.get());

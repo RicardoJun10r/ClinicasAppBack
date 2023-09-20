@@ -81,6 +81,40 @@ public class ClinicaService {
         throw new ResourceNotFoundException("Conta não encontrada!");
     }
 
+    public Profissional updateProfissional(UUID uuid, Profissional old){
+        Optional<Clinica> clinica = this.clinicaRepository.findById(uuid);
+        if(clinica.isPresent()){
+
+            Optional<Profissional> aux = clinica.get().getProfissionais().stream().filter(pro -> pro.getCode().equals(old.getCode())).findFirst();
+
+            if(aux.isPresent()){
+                return this.profissionalService.update(aux.get().getCode(), aux.get());
+            }
+
+            throw new ResourceNotFoundException("Profissional não encontrado!");
+
+        }
+
+        throw new ResourceNotFoundException("Clínica não encontrada!");
+    }
+
+    public Agendamento updateAgendamento(UUID clinicaid, UUID old, Agendamento novo){
+        Optional<Clinica> clinica = this.clinicaRepository.findById(clinicaid);
+        if(clinica.isPresent()){
+
+            Optional<Agendamento> aux = clinica.get().getAgendamentos().stream().filter(pro -> pro.getUuid().equals(old)).findFirst();
+
+            if(aux.isPresent()){
+                return this.agendamentoService.update(novo, old);
+            }
+
+            throw new ResourceNotFoundException("Agendamento não encontrado!");
+
+        }
+
+        throw new ResourceNotFoundException("Clínica não encontrada!");
+    }
+
     public String delete(UUID uuid){
         Optional<Clinica> clinica = this.clinicaRepository.findById(uuid);
         if(clinica.isPresent()){
@@ -89,7 +123,7 @@ public class ClinicaService {
             return "Deletado [ " + clinica.get().getName() + " ]";
         }
 
-        throw new ResourceNotFoundException("Conta não encontrada!");
+        throw new ResourceNotFoundException("Clínica não encontrada!");
     }
 
     public Profissional addWorker(Profissional profissional, String cnpj){
@@ -191,7 +225,11 @@ public class ClinicaService {
     }
 
     private void attCampos(Clinica velho, Clinica novo){
-        
+
+        if(novo.getLogin() != null && !novo.getLogin().isEmpty()){
+            velho.setLogin(novo.getLogin());
+        }
+
         if(novo.getName() != null && !novo.getName().isEmpty()){
             velho.setName(novo.getName());
         }
