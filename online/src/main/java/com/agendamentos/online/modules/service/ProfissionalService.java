@@ -13,7 +13,6 @@ import com.agendamentos.online.error.Exception.ResourceNotFoundException;
 import com.agendamentos.online.modules.model.Agendamento;
 import com.agendamentos.online.modules.model.Profissional;
 import com.agendamentos.online.modules.repository.ProfissionalRepository;
-import com.agendamentos.online.util.enums.ApointmentEnum;
 
 @Service
 public class ProfissionalService {
@@ -37,12 +36,8 @@ public class ProfissionalService {
         Optional<Profissional> pOptional = this.profissionalRepository.findById(agendamento.getProfissional().getUuid());
 
         if(pOptional.isPresent()){
-
-            if(pOptional.get().getAgendamentos() == null || agendamento.getStatus() != ApointmentEnum.MARCADO){
-                pOptional.get().getAgendamentos().add(agendamento);
-                return this.profissionalRepository.save(pOptional.get());
-            }
-            throw new ResourceBadRequest("Horário indisponível !");
+            pOptional.get().getAgendamentos().add(agendamento);
+            return this.profissionalRepository.save(pOptional.get());
         }
         throw new ResourceNotFoundException("Profissional não encontrado !");
     }

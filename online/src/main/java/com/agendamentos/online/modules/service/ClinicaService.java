@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.agendamentos.online.error.Exception.ResourceBadRequest;
+import com.agendamentos.online.error.Exception.ResourceConditionFailed;
 import com.agendamentos.online.error.Exception.ResourceNotFoundException;
 import com.agendamentos.online.modules.model.Agendamento;
 import com.agendamentos.online.modules.model.Clinica;
@@ -121,7 +122,13 @@ public class ClinicaService {
             Optional<Profissional> profissional = findWorker(clinica.get().getProfissionais(), code);
             Optional<Paciente> paciente = this.pacienteService.find(cpf);
             if(profissional.isPresent()){
+
+                 Optional<Agendamento> aux = profissional.get().getAgendamentos().stream().filter(a -> a.getAppointmentDate().equals(agendamento.getAppointmentDate()) && a.getAppointmentTime().equals(agendamento.getAppointmentTime())).findFirst();
                 
+                if(aux.isPresent()){
+                    throw new ResourceConditionFailed("Horário indisponível!");
+                }
+
                 clinica.get().getAgendamentos().add(agendamento);
 
                 agendamento.setClinica(clinica.get());
@@ -139,6 +146,7 @@ public class ClinicaService {
                 this.clinicaRepository.save(clinica.get());
 
                 return criado.get();
+
             }
 
             throw new ResourceNotFoundException("Profissional não encontrada!");

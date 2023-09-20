@@ -7,7 +7,6 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.agendamentos.online.error.Exception.ResourceConditionFailed;
 import com.agendamentos.online.error.Exception.ResourceNotFoundException;
 import com.agendamentos.online.modules.model.Agendamento;
 import com.agendamentos.online.modules.repository.AgendamentoRepository;
@@ -20,14 +19,7 @@ public class AgendamentoService {
     private AgendamentoRepository agendamentoRepository;
 
     public Agendamento save(Agendamento agendamento){
-        // Optional<Agendamento> aOptional = this.agendamentoRepository.findByConsulta(agendamento.getConsulta());
-        Optional<Agendamento> aOptional = this.agendamentoRepository.findAll().stream().filter(index -> index.getAppointmentDate().equals(agendamento.getAppointmentDate()) && index.getAppointmentTime().equals(agendamento.getAppointmentTime())).findFirst();
-        if(aOptional.isPresent()){
-            if(aOptional.get().getStatus() == ApointmentEnum.MARCADO){
-                throw new ResourceConditionFailed("Horário indisponível");
-            }
-            // return update(agendamento, aOptional.get().getUuid());
-        }
+        
         agendamento.setStatus(ApointmentEnum.MARCADO);
         
         return this.agendamentoRepository.save(agendamento);
