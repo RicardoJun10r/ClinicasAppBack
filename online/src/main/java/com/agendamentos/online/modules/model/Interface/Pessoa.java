@@ -32,6 +32,9 @@ public abstract class Pessoa {
     @Column(name = "created_col")
     private LocalDate createdAt;
 
+    @Column(name = "images")
+    private String imageURL;
+
     @PrePersist
     void setCreatedAt(){
         this.createdAt = LocalDate.now();

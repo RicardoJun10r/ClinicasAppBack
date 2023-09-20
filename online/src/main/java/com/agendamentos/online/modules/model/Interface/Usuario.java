@@ -23,7 +23,4 @@ public abstract class Usuario extends Pessoa {
     @Column(nullable = false, name = "cargo")
     private Boolean cargo;
 
-    @Column(name = "images")
-    private String[] imagesURL;
-
 }

@@ -126,6 +126,23 @@ public class ClinicaService {
         throw new ResourceNotFoundException("Clínica não encontrada!");
     }
 
+    public String deleteWorker(UUID uuid, String code){
+        Optional<Clinica> clinica = this.clinicaRepository.findById(uuid);
+        if(clinica.isPresent()){
+
+            Optional<Profissional> aux = clinica.get().getProfissionais().stream().filter(p -> p.getCode().equals(code)).findFirst();
+            
+            if(aux.isPresent()){
+                return this.pacienteService.delete(aux.get().getUuid());
+            }
+
+            throw new ResourceNotFoundException("Profissional não encontrado!");
+
+        }
+
+        throw new ResourceNotFoundException("Clínica não encontrada!");
+    }
+
     public Profissional addWorker(Profissional profissional, String cnpj){
         Optional<Clinica> clinica = this.clinicaRepository.findByCnpj(cnpj);
         if(clinica.isPresent()){

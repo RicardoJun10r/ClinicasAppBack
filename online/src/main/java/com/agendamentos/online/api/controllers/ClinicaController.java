@@ -80,9 +80,14 @@ public class ClinicaController {
         return new ResponseEntity<Agendamento>(this.clinicaService.updateAgendamento(clinica, agendamento, agendamento2), HttpStatus.OK);
     }
     
-    @DeleteMapping("/uuid")
+    @DeleteMapping("/delete/{uuid}")
     public ResponseEntity<String> delete(@PathVariable UUID uuid){
         return new ResponseEntity<String>(this.clinicaService.delete(uuid), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete/{uuid}/profissional/{code}")
+    public ResponseEntity<String> deleteWorker(@PathVariable UUID uuid, @PathVariable String code){
+        return new ResponseEntity<String>(this.clinicaService.deleteWorker(uuid, code), HttpStatus.OK);
     }
 
 }
