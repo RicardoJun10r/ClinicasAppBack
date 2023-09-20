@@ -6,11 +6,13 @@ import java.util.UUID;
 import lombok.Data;
 
 @Data
-public class ProfissionalDTO {
+public class PacienteResponse {
     private UUID uuid;
     private String name;
     private LocalDate createdAt;
     private String imageURL;
-    private String code;
-    private String especialidade;
+    private String login;
+    private String password;
+    private Boolean cargo;
+    private String cpf;
 }

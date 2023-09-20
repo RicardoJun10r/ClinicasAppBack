@@ -61,7 +61,7 @@ public class ProfissionalService {
             return paciente;
         }
 
-        throw new ResourceNotFoundException("Conta não encontrada!");
+        throw new ResourceNotFoundException("Profissional não encontrado!");
     }
 
     public Profissional update(String code, Profissional profissionalAtt){
@@ -72,18 +72,18 @@ public class ProfissionalService {
             return proficional.get();
         }
 
-        throw new ResourceNotFoundException("Conta não encontrada!");
+        throw new ResourceNotFoundException("Profissional não encontrado!");
     }
 
     public String delete(UUID uuid){
         Optional<Profissional> proficional = this.profissionalRepository.findById(uuid);
+        
         if(proficional.isPresent()){
-            
-            this.profissionalRepository.deleteById(proficional.get().getUuid());
+            this.profissionalRepository.deleteById(uuid);
             return "Deletado [ " + proficional.get().getName() + " ]";
         }
 
-        throw new ResourceNotFoundException("Conta não encontrada!");
+        throw new ResourceNotFoundException("Profissional não encontrado!");
     }
 
     private void attCampos(Profissional velho, Profissional novo){

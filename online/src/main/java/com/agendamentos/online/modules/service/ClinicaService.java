@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,8 @@ import com.agendamentos.online.modules.model.Clinica;
 import com.agendamentos.online.modules.model.Paciente;
 import com.agendamentos.online.modules.model.Profissional;
 import com.agendamentos.online.modules.repository.ClinicaRepository;
+import com.agendamentos.online.shared.AgendamentoResponse;
+import com.agendamentos.online.shared.ClinicaResponse;
 
 @Service
 public class ClinicaService {
@@ -52,7 +55,7 @@ public class ClinicaService {
             return clinica;
         }
 
-        throw new ResourceNotFoundException("Conta não encontrada!");
+        throw new ResourceNotFoundException("Clínica não encontrada!");
     }
 
     public List<Clinica> findAll(){
@@ -61,13 +64,13 @@ public class ClinicaService {
             return clinicas;
         }
 
-        throw new ResourceNotFoundException("Conta não encontrada!");
+        throw new ResourceNotFoundException("Clínica não encontrada!");
     }
 
     public Clinica findByLogin(String login){
         Optional<Clinica> pOptional = this.clinicaRepository.findByLogin(login);
         if(pOptional.isPresent()) return pOptional.get();
-        throw new ResourceNotFoundException("Não encontrado!");
+        throw new ResourceNotFoundException("Clínica não encontrada!");
     }
 
     public Clinica update(UUID uuid, Clinica clinicaAtt){
@@ -78,7 +81,7 @@ public class ClinicaService {
             return clinica.get();
         }
 
-        throw new ResourceNotFoundException("Conta não encontrada!");
+        throw new ResourceNotFoundException("Clínica não encontrada!");
     }
 
     public Profissional updateProfissional(UUID uuid, Profissional old){
@@ -131,9 +134,12 @@ public class ClinicaService {
         if(clinica.isPresent()){
 
             Optional<Profissional> aux = clinica.get().getProfissionais().stream().filter(p -> p.getCode().equals(code)).findFirst();
+
+            clinica.get().getProfissionais().removeIf(p -> p.getCode().equals(code));
             
             if(aux.isPresent()){
-                return this.pacienteService.delete(aux.get().getUuid());
+                this.clinicaRepository.save(clinica.get());
+                return this.profissionalService.delete(aux.get().getUuid());
             }
 
             throw new ResourceNotFoundException("Profissional não encontrado!");
@@ -154,7 +160,7 @@ public class ClinicaService {
             return criado;
         }
 
-        throw new ResourceNotFoundException("Conta não encontrada!");
+        throw new ResourceNotFoundException("Clínica não encontrada!");
     }
 
     public List<Profissional> listWorkers(String cnpj){
@@ -163,7 +169,7 @@ public class ClinicaService {
             return clinica.get().getProfissionais();
         }
 
-        throw new ResourceNotFoundException("Conta não encontrada!");
+        throw new ResourceNotFoundException("Clínica não encontrada!");
     }
 
     public Agendamento addAppointment(Agendamento agendamento, String code, String cpf, UUID uuid){
@@ -200,7 +206,7 @@ public class ClinicaService {
 
             }
 
-            throw new ResourceNotFoundException("Profissional não encontrada!");
+            throw new ResourceNotFoundException("Profissional não encontrado!");
 
         }
 
@@ -208,13 +214,17 @@ public class ClinicaService {
         
     }
 
-    public List<Agendamento> getAppointments(UUID uuid, String code, LocalDate dia){
+    public List<AgendamentoResponse> getAppointments(UUID uuid, String code, LocalDate dia){
         Optional<Clinica> clinica = this.clinicaRepository.findById(uuid);
         if(clinica.isPresent()){
             Optional<Profissional> profissional = findWorker(clinica.get().getProfissionais(), code);
             if(profissional.isPresent()){
+                ModelMapper mapper = new ModelMapper();
                 List<Agendamento> agendamentos = profissional.get().getAgendamentos().stream().filter(agendamento -> agendamento.getAppointmentDate().equals(dia)).sorted((agendamento1, agendamento2) -> agendamento1.getAppointmentDate().compareTo(agendamento2.getAppointmentDate())).collect(Collectors.toList());
-                return agendamentos;
+                List<AgendamentoResponse> aux = agendamentos.stream().map(
+                    a -> mapper.map(a, AgendamentoResponse.class)
+                ).collect(Collectors.toList());
+                return aux;
             }
             throw new ResourceNotFoundException("Profissional não encontrada!");
         }

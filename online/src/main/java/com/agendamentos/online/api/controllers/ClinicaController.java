@@ -22,6 +22,7 @@ import com.agendamentos.online.modules.model.Clinica;
 import com.agendamentos.online.modules.model.Profissional;
 import com.agendamentos.online.modules.service.ClinicaService;
 import com.agendamentos.online.shared.AgendamentoDTO;
+import com.agendamentos.online.shared.AgendamentoResponse;
 
 @RestController
 @RequestMapping("/api/clinica")
@@ -61,8 +62,8 @@ public class ClinicaController {
     }
     
     @GetMapping("/{uuid}/{code}/agendamentos")
-    public ResponseEntity<List<Agendamento>> getAppointments(@PathVariable UUID uuid, @PathVariable String code, @RequestParam LocalDate dia){
-        return new ResponseEntity<List<Agendamento>>(this.clinicaService.getAppointments(uuid, code, dia), HttpStatus.OK);
+    public ResponseEntity<List<AgendamentoResponse>> getAppointments(@PathVariable UUID uuid, @PathVariable String code, @RequestParam LocalDate dia){
+        return new ResponseEntity<List<AgendamentoResponse>>(this.clinicaService.getAppointments(uuid, code, dia), HttpStatus.OK);
     }
 
     @PutMapping("/att/{uuid}")
